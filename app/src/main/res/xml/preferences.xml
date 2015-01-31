@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:key="pref_background_updates"
+        android:title="@string/background_updates"
+        android:summary="@string/choose_background_updates"
+        android:summaryOff="@string/background_updates_off"
+        android:summaryOn="@string/background_updates_on"
+        android:defaultValue="false"
+        />
+
+</PreferenceScreen>
