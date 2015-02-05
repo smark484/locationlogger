@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.example.com.locationlogger.preferences.SettingsActivity;
 import android.example.com.locationlogger.service.LocationLoggingService;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.preference.PreferenceManager;
@@ -65,9 +66,10 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
 
     private BroadcastReceiver mLocationReceiver;
 
-    private ResultReceiver mResultReceiver;
+    private ResultReceiver mAddressResultReceiver;
     private String mCurrentAddress;
 
+    private Handler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +78,8 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mHandler = new Handler();
 
         mMap = ((SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 
@@ -87,7 +91,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
                 {
                     Toast.makeText(MainActivity.this, getString(R.string.fething_address), Toast.LENGTH_SHORT).show();
 
-                    AddressIntentService.startActionFetchAddress(MainActivity.this, mCurrentLocation, mResultReceiver);
+                    AddressIntentService.startActionFetchAddress(MainActivity.this, mCurrentLocation, mAddressResultReceiver);
 
                 } else {
                     Toast.makeText(MainActivity.this, getString(R.string.no_valid_location), Toast.LENGTH_SHORT).show();
@@ -97,7 +101,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
 
         buildGoogleApiClient();
 
-        mResultReceiver = new ResultReceiver(new Handler()) {
+        mAddressResultReceiver = new ResultReceiver(mHandler) {
             @Override
             protected void onReceiveResult(int resultCode, Bundle resultData) {
                 super.onReceiveResult(resultCode, resultData);
@@ -105,18 +109,25 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
                     handleNewAddress( resultData.getString(Globals.ADDRESS_RESULT) );
                 }
                 // store location and address:
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
 
-                        Cursor existingLog = getContentResolver().query(
+                        Cursor existingAddressCursor = getContentResolver().query(
                                 LocationEntry.CONTENT_URI,
                                 new String[]{LocationEntry.COLUMN_LOCATION_TIMESTAMP},
                                 LocationEntry.COLUMN_LOCATION_ADDRESS + " = '" + mCurrentAddress + "'",null,null);
 
-                        if(existingLog != null && existingLog.moveToFirst())
+                        if(existingAddressCursor != null && existingAddressCursor.moveToFirst())
                         {
                             // this address is already in the database!
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(MainActivity.this, getString(R.string.address_already_logged), Toast.LENGTH_SHORT).show();
+                                }
+                            });
                             return;
                         }
 

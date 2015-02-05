@@ -10,6 +10,7 @@
     <string name="no_address_found">no address found at this location.</string>
     <string name="fething_address">fetching address…</string>
     <string name="no_valid_location">no valid location.</string>
+    <string name="address_already_logged">this address is already logged!</string>
     <string name="action_archive">Archive</string>
     <string name="title_activity_detail">DetailActivity</string>
     <string name="background_updates">Background updates</string>
