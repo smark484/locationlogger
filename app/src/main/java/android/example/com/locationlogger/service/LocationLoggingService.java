@@ -62,13 +62,20 @@ public class LocationLoggingService extends Service   implements GoogleApiClient
 
         Log.i(LOG_TAG, "onStartCommand");
 
-        if(mGoogleApiClient == null)
-            buildGoogleApiClient();
+//        if(mGoogleApiClient == null)
+//            buildGoogleApiClient();
+//
+//        if(! mIsRunning)
+//        {
+//            startLocationUpdates();
+//        }
 
-        if(! mIsRunning)
-        {
-            startLocationUpdates();
+        if(mGoogleApiClient != null) {
+            stopLocationUpdates();
         }
+
+        buildGoogleApiClient();
+        startLocationUpdates();
 
         return super.onStartCommand(intent, flags, startId);
     }
