@@ -18,5 +18,6 @@
     <string name="background_updates_off">Background updates are OFF</string>
     <string name="background_updates_on">Background updates are ON</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="new_location_found">new location found, long tap on the map to get address.</string>
 
 </resources>

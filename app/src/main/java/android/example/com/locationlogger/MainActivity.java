@@ -356,9 +356,8 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
 
             // there is a new valid location at min. distance from the last one, so invalidate the address.
             mCurrentAddress = null;
-            ((TextView)findViewById(R.id.location_info_textview)).setText("new location found, long tap on the map to get address.");
+            ((TextView)findViewById(R.id.location_info_textview)).setText(getString(R.string.new_location_found));
 
-            //TODO: also update Share intent in result receiver?
             if(mShareActionProvider != null)
             {
                 mShareActionProvider.setShareIntent(

@@ -30,7 +30,7 @@ public class LocationLoggingService extends Service   implements GoogleApiClient
 
     private static final String LOG_TAG = LocationLoggingService.class.getSimpleName();
 
-    private static final double LOCATION_PROX_DISTANCE = 100D;
+    private static final double LOCATION_PROX_DISTANCE = 30D;
 
     private static final long LOCATION_MAX_AGE = 60000L;
 
