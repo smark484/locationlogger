@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * Created by smark on 18-01-2015.
  */
-class Formatter {
+public class Formatter {
     private static final DateFormat sDateFormat = DateFormat.getDateTimeInstance();
     private static final SimpleDateFormat sSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     private static final SimpleDateFormat sDurationFormat = new SimpleDateFormat("HH:mm:ss");

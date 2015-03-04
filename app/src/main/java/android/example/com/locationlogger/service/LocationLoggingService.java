@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.example.com.locationlogger.Formatter;
 import android.example.com.locationlogger.MainActivity;
 import android.example.com.locationlogger.ProximityLib;
 import android.location.Location;
@@ -23,6 +24,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLngBounds;
 
 import android.example.com.locationlogger.LocationContract.LocationEntry;
+import android.widget.Toast;
 
 import java.util.Date;
 
@@ -102,6 +104,16 @@ public class LocationLoggingService extends Service   implements GoogleApiClient
     // --  GoogleApiClient methods ------------------------------------------------------------------------------------
     @Override
     public void onConnected(Bundle bundle) {
+
+        Log.i(LOG_TAG, "onConnected()");
+
+        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if(location != null && !locationIsStale(location))
+        {
+            Log.v(LOG_TAG, "Last location is good...");
+            onLocationChanged(location);
+        }
+
         LocationRequest request = new LocationRequest()
                 .setInterval(LOCATION_UPDATE_INTERVAL)
                 .setFastestInterval(LOCATION_UPDATE_FASTEST_INTERVAL)
@@ -113,19 +125,20 @@ public class LocationLoggingService extends Service   implements GoogleApiClient
 
     @Override
     public void onConnectionSuspended(int i) {
+        Log.i(LOG_TAG,"onConnectionSuspended("+i+")");
         mGoogleApiClient.connect();
     }
 
     @Override
     public void onLocationChanged(Location location) {
-
+            Log.v(LOG_TAG, "onLocationChanged(acc="+location.getAccuracy()+", time="+ Formatter.XmlTimestamp(location.getTime())+")");
             // search for logged locations nearby and eventually notify user.
             handleNewLocation(location);
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
+        Log.i(LOG_TAG, "onConnectionFailed()");
     }
 
     // -- Helper methods ----------------------------------------------------------------------------------
